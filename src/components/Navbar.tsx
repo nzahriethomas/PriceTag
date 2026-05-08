@@ -31,7 +31,9 @@ export const Navbar = () => {
       </div>
 
       {/* Search bar / Filter */}
-      <div className="flex items-center py-3 px-4"></div>
+      {/* <div className="flex items-center py-3 px-4">
+
+      </div> */}
 
       {/* Authentication Actions - Right */}
       <div className="flex items-center py-3 px-4">

@@ -11,7 +11,7 @@ import { Navbar } from "./components/Navbar";
 
 function App() {
   return (
-    <>
+    <main className="pt-[85px]">
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -20,7 +20,7 @@ function App() {
         <Route path="/settings" element={<Settings />} />
         <Route path="/signup" element={<Signup />} />
       </Routes>
-    </>
+    </main>
   );
 }
 
