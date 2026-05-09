@@ -4,20 +4,24 @@ import { useState, useEffect } from "react";
 import { supabase } from "../utils/supabase";
 
 // Reusable component to protect routes that require authentication
-const useSession = () => {
+export const useSession = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [userId, setUserId] = useState<string | null>(null);
 
   // Check for user authentication status
   useEffect(() => {
-    const checkSession = async () => {
-      const { data } = await supabase.auth.getSession();
-      setIsAuthenticated(!!data.session);
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAuthenticated(!!session);
       setIsLoading(false);
-    };
-    checkSession();
+      setUserId(session?.user.id ?? null); // stoure user ID in state for easy access across components
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
-  return { isAuthenticated, isLoading };
+  return { isAuthenticated, isLoading, userId };
 };
 
 export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {

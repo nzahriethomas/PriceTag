@@ -37,8 +37,8 @@ export const Signup = () => {
     // Create user profile in "profiles" table
     const { error: profileError } = await supabase.from("profiles").insert({
       id: data.user?.id,
-      firstName: form.firstName,
-      lastName: form.lastName,
+      first_name: form.firstName,
+      last_name: form.lastName,
     });
     // Handle potential profile creation error
     if (profileError) {
