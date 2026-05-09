@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { supabase } from "../utils/supabase";
+import { useNavigate } from "react-router";
+
 // import primaryLogo from "../assets/pricetag-logo.png";
 
 export const Signup = () => {
@@ -11,14 +14,43 @@ export const Signup = () => {
     confirmPassword: "",
   });
 
+  // Navigation hook
+  const navigate = useNavigate();
+
   // Helper functions
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Supabase user signup authentication
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(form); // Placeholder until supabase is wired
+    const { data, error } = await supabase.auth.signUp({
+      email: form.email,
+      password: form.password,
+    });
+    // Handle potential authentication error
+    if (error) {
+      alert(error.message);
+      return;
+    }
+    // Create user profile in "profiles" table
+    const { error: profileError } = await supabase.from("profiles").insert({
+      id: data.user?.id,
+      firstName: form.firstName,
+      lastName: form.lastName,
+    });
+    // Handle potential profile creation error
+    if (profileError) {
+      alert(profileError.message);
+      return;
+    }
+    // Redirect to profile page upon successful signup
+    if (data.user) {
+      navigate("/profile");
+    }
+
+    console.log({ data, error });
   };
 
   return (

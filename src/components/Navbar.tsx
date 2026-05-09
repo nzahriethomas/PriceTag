@@ -16,18 +16,6 @@ export const Navbar = () => {
             className=" h-[85px] w-auto"
           />
         </Link>
-        <Link
-          to="/"
-          className="py-2 px-4 md:text-lg text-white hover:text-sky-300 rounded-2xl transition duration-300"
-        >
-          <ImHome className="md:h-[30px] md:w-auto" />
-        </Link>
-        <Link
-          to="/profile"
-          className="py-2 px-4 md:text-lg text-white hover:text-sky-300 rounded-2xl transition duration-300"
-        >
-          <FaUserAlt className="md:h-[25px] md:w-auto" />
-        </Link>
       </div>
 
       {/* Search bar / Filter */}
@@ -48,6 +36,12 @@ export const Navbar = () => {
           className="py-2 px-4 md:text-lg text-white hover:text-sky-300 rounded-2xl transition duration-300 underline"
         >
           Register
+        </Link>
+        <Link
+          to="/profile"
+          className="py-2 px-4 md:text-lg text-white hover:text-sky-300 rounded-2xl transition duration-300"
+        >
+          <FaUserAlt className="md:h-[25px] md:w-auto" />
         </Link>
       </div>
     </nav>

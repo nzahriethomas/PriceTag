@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { supabase } from "../utils/supabase";
+import { useNavigate } from "react-router";
 
 export const Login = () => {
   // Variable declarations
@@ -7,14 +9,28 @@ export const Login = () => {
     password: "",
   });
 
+  // Navigation hook
+  const navigate = useNavigate();
+
   // Helper functions
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Supabase user login authentication
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(form); // Placeholder until supabase is wired
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: form.email,
+      password: form.password,
+    });
+    if (error) {
+      alert(error.message);
+      return;
+    } else if (data.user) {
+      navigate("/profile");
+    }
+    console.log({ data, error });
   };
   return (
     <>
