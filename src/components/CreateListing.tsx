@@ -2,7 +2,13 @@ import React from "react";
 import { useState } from "react";
 import { supabase } from "../utils/supabase";
 
-export const CreateListing = ({ onClose }: { onClose: () => void }) => {
+export const CreateListing = ({
+  onClose,
+  onListingChange,
+}: {
+  onClose: () => void;
+  onListingChange: () => void;
+}) => {
   // State declarations
   const [form, setForm] = useState({
     title: "",
@@ -62,7 +68,8 @@ export const CreateListing = ({ onClose }: { onClose: () => void }) => {
     // Clear form after successful submission
     setForm({ title: "", description: "", price: "" });
     setImage(null);
-    alert("Listing created successfully!");
+    onClose(); // Close the create listing form after submission
+    onListingChange(); // Refresh listings on home page after creating a new listing
   };
 
   return (
