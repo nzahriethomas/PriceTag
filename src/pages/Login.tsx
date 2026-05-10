@@ -28,7 +28,7 @@ export const Login = () => {
       alert(error.message);
       return;
     } else if (data.user) {
-      navigate("/profile");
+      navigate("/");
     }
     console.log({ data, error });
   };

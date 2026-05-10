@@ -57,7 +57,7 @@ export const Signup = () => {
     <>
       <div className="flex min-h-screen bg-sky-200">
         <form
-          className="bg-white rounded-2xl w-75 px-10 py-10 flex flex-col gap-6 m-auto align-center"
+          className="bg-white rounded-2xl w-75 px-10 py-10 flex flex-col gap-6 m-auto"
           onSubmit={handleSubmit}
         >
           <input
