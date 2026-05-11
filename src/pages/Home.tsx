@@ -48,7 +48,7 @@ export const Home = () => {
             <button
               type="button"
               onClick={() => setIsOpen(true)}
-              className="bg-orange-600 font-semibold text-white py-2 px-4 rounded-2xl hover:bg-sky-300 transition duration-300"
+              className="bg-orange-600 font-semibold text-white py-2 px-4 rounded-2xl hover:bg-gray-600 transition duration-300"
             >
               Create Listing
             </button>

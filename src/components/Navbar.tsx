@@ -17,7 +17,6 @@ export const Navbar = () => {
 
   // Fetch user profile data if authenticated
   useEffect(() => {
-    // Fetch user profile data from "profiles" table
     const fetchUserProfile = async () => {
       if (!isAuthenticated) {
         setUser({ firstName: "", lastName: "" }); // ← clear on logout

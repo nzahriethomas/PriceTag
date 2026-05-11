@@ -12,7 +12,7 @@ import { ProtectedRoute, PublicRoute } from "./components/UserRouting";
 
 function App() {
   return (
-    <main className="pt-[85px]">
+    <main className="pt-[85px] font-serif">
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
