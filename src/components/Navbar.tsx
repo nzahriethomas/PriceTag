@@ -1,6 +1,6 @@
+import React from "react";
 import { Link } from "react-router";
 import { useSession } from "./UserRouting";
-import { useState } from "react";
 import { supabase } from "../utils/supabase";
 import { useNavigate } from "react-router";
 import { ManageProfile } from "./ManageProfile";
@@ -16,11 +16,25 @@ export const Navbar = () => {
   // Custom hook to fetch user profile data
   const { user, fetchUserProfile } = useProfile(userId);
 
+  // Create a ref and attach it to the dropdown wrapper div
+  const menuRef = React.useRef<HTMLDivElement>(null);
+
   const navigate = useNavigate(); // Initialize navigate function for redirection after logout
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // For drop down menu wired to profile icon
-  const [isProfileOpen, setIsProfileOpen] = useState(false); // For changing profile details in the dropdown menu
-  const [isEmailOpen, setIsEmailOpen] = useState(false); // For changing email in the dropdown menu
-  const [isPasswordOpen, setIsPasswordOpen] = useState(false); // For changing password in the dropdown menu
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false); // For drop down menu wired to profile icon
+  const [isProfileOpen, setIsProfileOpen] = React.useState(false); // For changing profile details in the dropdown menu
+  const [isEmailOpen, setIsEmailOpen] = React.useState(false); // For changing email in the dropdown menu
+  const [isPasswordOpen, setIsPasswordOpen] = React.useState(false); // For changing password in the dropdown menu
+
+  // Add the click outside listener
+  React.useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleLogout = async () => {
     navigate("/"); // Redirect to home page after logout
@@ -74,14 +88,18 @@ export const Navbar = () => {
           </>
         )}
         {/* Profile dropdown menu container */}
-        <div className="relative md:px-2 md:text-lg flex items-center">
+        <div
+          className="relative md:pr-4 md:text-lg flex items-center"
+          ref={menuRef}
+          onMouseLeave={() => setIsMenuOpen(false)}
+        >
           {/* Clickable profile icon button */}
           <button type="button" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-            <FaUserAlt className="md:h-[25px] md:w-auto md:text-lg text-white hover:text-sky-300 rounded-2xl transition duration-300" />
+            <FaUserAlt className="md:h-[25px] md:w-auto md:text-lg text-white hover:text-sky-300 rounded-full transition duration-300" />
           </button>
           {/* Dropdown — absolutely positioned, floats below the icon */}
           {isMenuOpen && userId && (
-            <div className="absolute right-0 top-full text-sm mt-1 w-48 bg-white rounded-xl shadow-lg z-50">
+            <div className="absolute right-0 top-full text-sm mt-1 w-48 bg-white shadow-lg z-50">
               {/* menu items here */}
               <button
                 type="button"

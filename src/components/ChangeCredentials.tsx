@@ -33,8 +33,6 @@ export const ChangeCredentials = ({
       alert("User authentication error. Please log in again.");
       return;
     }
-    // User ID is needed for email change to update the email in the users table in Supabase database. Password change does not require userId as it is handled by Supabase auth and does not require a database update to change the email in the users table. This is because the email is only stored in the auth.users table and not duplicated in the users profile table which allows for more efficient updates to user credentials without having to worry about keeping multiple tables in sync with each other.
-    const userId = authData.user.id;
 
     if (mode === "email") {
       const { error: emailError } = await supabase.auth.updateUser({
