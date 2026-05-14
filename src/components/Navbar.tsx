@@ -1,45 +1,29 @@
 import { Link } from "react-router";
+import { useSession } from "./UserRouting";
+import { useState } from "react";
+import { supabase } from "../utils/supabase";
+import { useNavigate } from "react-router";
+import { ManageProfile } from "./ManageProfile";
+import { useProfile } from "../hooks/useProfile";
+import { ChangeCredentials } from "./ChangeCredentials";
 // Media & graphic imports
 import primaryLogo from "../assets/pricetag-logo.png";
 import { FaUserAlt } from "react-icons/fa";
-import { RxExit } from "react-icons/rx";
-import { useSession } from "./UserRouting";
-import { useState, useEffect } from "react";
-import { supabase } from "../utils/supabase";
 
 export const Navbar = () => {
-  // State declarations
-  const { isAuthenticated, userId } = useSession();
-  const [user, setUser] = useState({
-    firstName: "",
-    lastName: "",
-  });
+  // Check if user is authenticated and pass through userId for user specific requests among listings
+  const { userId } = useSession();
+  // Custom hook to fetch user profile data
+  const { user, fetchUserProfile } = useProfile(userId);
 
-  // Fetch user profile data if authenticated
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      if (!isAuthenticated) {
-        setUser({ firstName: "", lastName: "" }); // ← clear on logout
-        return; // If not authenticated, skip fetching profile and ensure user state is clean
-      }
-
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("first_name, last_name")
-        .eq("id", userId)
-        .single();
-
-      if (data) {
-        setUser({ firstName: data.first_name, lastName: data.last_name });
-      }
-      if (error) {
-        console.error("Error fetching user profile:", error);
-      }
-    };
-    fetchUserProfile();
-  }, [isAuthenticated]);
+  const navigate = useNavigate(); // Initialize navigate function for redirection after logout
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // For drop down menu wired to profile icon
+  const [isProfileOpen, setIsProfileOpen] = useState(false); // For changing profile details in the dropdown menu
+  const [isEmailOpen, setIsEmailOpen] = useState(false); // For changing email in the dropdown menu
+  const [isPasswordOpen, setIsPasswordOpen] = useState(false); // For changing password in the dropdown menu
 
   const handleLogout = async () => {
+    navigate("/"); // Redirect to home page after logout
     const { error } = await supabase.auth.signOut();
     if (error) {
       console.error("Error signing out:", error);
@@ -67,7 +51,7 @@ export const Navbar = () => {
 
       {/* Authentication Actions - Right */}
       <div className="flex items-center py-3 px-4">
-        {isAuthenticated ? (
+        {userId ? (
           //show Welcome message if user is authenticated
           <span className="text-white md:text-lg mr-4">
             {user.firstName ? `Welcome back, ${user.firstName}!` : null}
@@ -89,25 +73,99 @@ export const Navbar = () => {
             </Link>
           </>
         )}
+        {/* Profile dropdown menu container */}
+        <div className="relative md:px-2 md:text-lg flex items-center">
+          {/* Clickable profile icon button */}
+          <button type="button" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            <FaUserAlt className="md:h-[25px] md:w-auto md:text-lg text-white hover:text-sky-300 rounded-2xl transition duration-300" />
+          </button>
+          {/* Dropdown — absolutely positioned, floats below the icon */}
+          {isMenuOpen && userId && (
+            <div className="absolute right-0 top-full text-sm mt-1 w-48 bg-white rounded-xl shadow-lg z-50">
+              {/* menu items here */}
+              <button
+                type="button"
+                onClick={() => {
+                  navigate("/profile");
+                  setIsMenuOpen(false);
+                }}
+                className="block w-full text-left py-2 px-4 hover:bg-gray-200"
+              >
+                👤 Profile
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsProfileOpen(true);
+                }}
+                className="block w-full text-left py-2 px-4 hover:bg-gray-200"
+              >
+                ✏️ Change Name
+              </button>
+              {isProfileOpen && (
+                <ManageProfile
+                  onClose={() => {
+                    setIsProfileOpen(false);
+                    setIsMenuOpen(false);
+                  }}
+                  onStateChange={fetchUserProfile}
+                />
+              )}
+              <button
+                type="button"
+                onClick={() => {
+                  setIsEmailOpen(true);
+                }}
+                className="block w-full text-left py-2 px-4 hover:bg-gray-200"
+              >
+                📧 Change Email
+              </button>
+              {isEmailOpen && (
+                <ChangeCredentials
+                  onClose={() => {
+                    setIsEmailOpen(false);
+                    setIsMenuOpen(false);
+                  }}
+                  onStateChange={fetchUserProfile}
+                  mode="email"
+                />
+              )}
+              {isPasswordOpen && (
+                <ChangeCredentials
+                  onClose={() => {
+                    setIsPasswordOpen(false);
+                    setIsMenuOpen(false);
+                  }}
+                  onStateChange={fetchUserProfile}
+                  mode="password"
+                />
+              )}
+              <button
+                type="button"
+                onClick={() => {
+                  setIsPasswordOpen(true);
+                }}
+                className="block w-full text-left py-2 px-4 hover:bg-gray-200"
+              >
+                🔒 Change Password
+              </button>
+              <button
+                type="button"
+                className="block w-full text-left py-2 px-4 hover:bg-gray-200"
+              >
+                🌗 Change Theme
+              </button>
 
-        <Link
-          to="/profile"
-          className="py-2 px-4 md:text-lg text-white hover:text-sky-300 rounded-2xl transition duration-300"
-        >
-          <FaUserAlt className="md:h-[25px] md:w-auto" />
-        </Link>
-        {
-          isAuthenticated ? (
-            // Show logout button if user is authenticated
-            <Link
-              onClick={handleLogout}
-              to="/"
-              className="py-2 px-4 md:text-lg font-bold text-white hover:text-sky-300 rounded-2xl transition duration-300"
-            >
-              <RxExit className="md:h-[25px] md:w-auto" />
-            </Link>
-          ) : null /* Don't show logout button if user is not authenticated */
-        }
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="block w-full text-left py-2 px-4 hover:bg-gray-200"
+              >
+                🚪 Logout
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </nav>
   );

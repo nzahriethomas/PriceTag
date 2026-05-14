@@ -10,3 +10,10 @@ interface Listing {
 }
 
 export type { Listing };
+
+interface Profile {
+  firstName: string;
+  lastName: string;
+  avatar: string;
+}
+export type { Profile };

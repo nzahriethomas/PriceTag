@@ -36,7 +36,7 @@ export const ManageProfile = ({
     //Get the current authentifcated user
     const { data: authData, error: authError } = await supabase.auth.getUser();
     if (authError || !authData.user) {
-      alert("Uesr authentication error. Please log in again.");
+      alert("User authentication error. Please log in again.");
       return;
     }
 

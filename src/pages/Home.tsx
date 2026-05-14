@@ -1,4 +1,3 @@
-import React from "react";
 import { CreateListing } from "../components/CreateListing";
 import { useState, useEffect } from "react";
 import { supabase } from "../utils/supabase";

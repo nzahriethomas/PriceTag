@@ -1,20 +1,20 @@
-import React from "react";
 import { useState, useEffect } from "react";
 import { FaUserAlt } from "react-icons/fa";
 import { supabase } from "../utils/supabase";
 import { CreateListing } from "../components/CreateListing";
-import { Link } from "react-router";
 import { ListingCard } from "../components/ListingCard";
 import { useSession } from "../components/UserRouting";
-
+import { useProfile } from "../hooks/useProfile";
+// Media imports
+import { MdEdit } from "react-icons/md";
 // Importing types
 import type { Listing } from "../types";
 import { ManageProfile } from "../components/ManageProfile";
 
 export const Profile = () => {
-  // Listings hdden slide-in menu for create listings form.
+  // Listings hdden pop-up menu for create listings form.
   const [isListingOpen, setIsListingOpen] = useState(false);
-  // Profile edit hidden slide-in menu for profile management form.
+  // Profile edit hidden pop-up menu for profile management form.
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   // state variable for listing data.
@@ -22,41 +22,8 @@ export const Profile = () => {
 
   // Check if user is authenticated and pass through userId for user specific requests among listings.
   const { userId } = useSession();
-
-  const [user, setUser] = useState({
-    firstName: "",
-    lastName: "",
-    avatar: "",
-  });
-
-  // Fetch user profile data if authenticated
-
-  const fetchUserProfile = async () => {
-    if (!userId) {
-      setUser({ firstName: "", lastName: "", avatar: "" }); // ← clear on logout
-      return; // If no user is logged in clear user state and skip fetching profile.
-    }
-
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("first_name, last_name, avatar")
-      .eq("id", userId)
-      .single();
-
-    if (data) {
-      setUser({
-        firstName: data.first_name,
-        lastName: data.last_name,
-        avatar: data.avatar,
-      });
-    }
-    if (error) {
-      console.error("Error fetching user profile:", error);
-    }
-  };
-  useEffect(() => {
-    fetchUserProfile();
-  }, [userId]);
+  // Custom hook to fetch user profile data.
+  const { user, fetchUserProfile } = useProfile(userId);
 
   // Fetch listings from supabase.
   const fetchListings = async () => {
@@ -82,7 +49,7 @@ export const Profile = () => {
   return (
     <>
       {/* Profile Header */}
-      <section className="bg-gray-200 flex items-end justify-between w-full pt-10 gap-4 p-4">
+      <section className="bg-gray-200 flex items-end w-full pt-10 gap-4 p-4">
         <div className="flex justify-items-end gap-4">
           {/* Render Profile image if it exists; otherwise, render default icon */}
           {!user.avatar ? (
@@ -94,31 +61,25 @@ export const Profile = () => {
               className="h-[50px] w-auto md:h-[50px] md:w-auto rounded-full"
             />
           )}
-          <span className="flex flex-col text-2xl md:text-4xl md:justify-end">
+          <span className="flex flex-col text-2xl md:text-4xl md:justify-center">
             {user.firstName} {user.lastName}
           </span>
         </div>
         {/* Profile Actions */}
-        <div className="flex md:pl-13 flex-col md:flex-row">
-          <button
-            type="button"
-            onClick={() => setIsProfileOpen(true)}
-            className="py-2 px-4 cursor-pointer hover:text-orange-500 rounded-2xl underline"
-          >
-            Edit Profile
-          </button>
+        <div>
           {isProfileOpen && (
             <ManageProfile
               onClose={() => setIsProfileOpen(false)}
               onStateChange={fetchUserProfile}
             />
           )}
-          <p className="flex items-center text-gray-500">|</p>
-          <Link to="/settings">
-            <button className="py-2 px-4 cursor-pointer hover:text-orange-500 rounded-2xl underline">
-              Settings
-            </button>
-          </Link>
+          <button
+            type="button"
+            onClick={() => setIsProfileOpen(true)}
+            className="py-2 px-4 cursor-pointer hover:text-orange-500 rounded-2xl transition duration-300"
+          >
+            <MdEdit className="h-6 w-6" />
+          </button>
         </div>
         {/* Profile Content */}
       </section>
