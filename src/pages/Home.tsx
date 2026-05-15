@@ -17,7 +17,7 @@ export const Home = () => {
     <>
       <div className=" min-h-screen pt-5 flex flex-col items-center gap-10">
         <h1 className="text-3xl font-bold text-center font-light">
-          Welcome to PriceTag
+          Welcome to <u>PriceTag</u>!
         </h1>
         {
           userId ? (

@@ -64,11 +64,11 @@ export const ChangeCredentials = ({
   };
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-2xl p-8 w-full max-w-md">
+      <div className="md:p-8 md:w-full md:max-w-md">
         {/* Form for editing email */}
         {(mode === "email" && (
           <form
-            className="bg-sky-400 rounded-2xl w-75 px-10 py-10 flex flex-col gap-6 m-auto"
+            className="bg-sky-400 rounded w-75 px-10 py-10 flex flex-col gap-6 m-auto"
             onSubmit={handleSubmit}
           >
             <input
@@ -97,7 +97,7 @@ export const ChangeCredentials = ({
         )) ||
           (mode === "password" && (
             <form
-              className="bg-sky-400 rounded-2xl w-75 px-10 py-10 flex flex-col gap-6 m-auto"
+              className="bg-sky-400 rounded w-75 px-10 py-10 flex flex-col gap-6 m-auto"
               onSubmit={handleSubmit}
             >
               <input

@@ -95,10 +95,10 @@ export const ManageProfile = ({
     <>
       {/* Modal overlay for edit profile form */}
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white rounded-2xl p-8 w-full max-w-md">
+        <div className="p-8 md:w-full md:max-w-md">
           {/* Form for editing profile with fields for first name, last name, and image upload */}
           <form
-            className="bg-sky-400 rounded-2xl w-75 px-10 py-10 flex flex-col gap-6 m-auto"
+            className="bg-sky-400 rounded w-75 px-10 py-10 flex flex-col gap-6 m-auto"
             onSubmit={handleSubmit}
           >
             <input

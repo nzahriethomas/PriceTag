@@ -33,7 +33,8 @@ export const ListingCard = ({
 
   return (
     <>
-      <div className="grid grid-cols-2 rounded border border-gray-300 justify-around shadow-sm overflow-hidden w-full max-w-2xl">
+      {/* Outer card container */}
+      <div className="grid md:grid-cols-2 rounded border border-gray-300 justify-around shadow-sm overflow-hiddenmd md:w-full md:max-w-2xl max-w-65">
         {/* Image Section */}
         <img
           src={listing.image_url}

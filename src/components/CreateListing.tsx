@@ -75,11 +75,11 @@ export const CreateListing = ({
   return (
     <>
       {/* Modal overlay for create listing form */}
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white rounded-2xl p-8 w-full max-w-md">
+      <div className="fixed inset-0 bg-black flex items-center justify-center z-50">
+        <div className="p-8 w-full max-w-sm md:max-w-md">
           {/* Form for creating a new listing with fields for title, description, price, and image upload */}
           <form
-            className="bg-sky-400 rounded-2xl w-75 px-10 py-10 flex flex-col gap-6 m-auto"
+            className="bg-sky-400 rounded md:w-75 px-10 py-10 flex flex-col gap-6 m-auto"
             onSubmit={handleSubmit}
           >
             <input

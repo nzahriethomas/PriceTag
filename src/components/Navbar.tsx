@@ -3,7 +3,6 @@ import { Link } from "react-router";
 import { useSession } from "./UserRouting";
 import { supabase } from "../utils/supabase";
 import { useNavigate } from "react-router";
-import { ManageProfile } from "./ManageProfile";
 import { useProfile } from "../hooks/useProfile";
 import { ChangeCredentials } from "./ChangeCredentials";
 // Media & graphic imports
@@ -21,7 +20,6 @@ export const Navbar = () => {
 
   const navigate = useNavigate(); // Initialize navigate function for redirection after logout
   const [isMenuOpen, setIsMenuOpen] = React.useState(false); // For drop down menu wired to profile icon
-  const [isProfileOpen, setIsProfileOpen] = React.useState(false); // For changing profile details in the dropdown menu
   const [isEmailOpen, setIsEmailOpen] = React.useState(false); // For changing email in the dropdown menu
   const [isPasswordOpen, setIsPasswordOpen] = React.useState(false); // For changing password in the dropdown menu
 
@@ -46,7 +44,7 @@ export const Navbar = () => {
 
   return (
     // Container
-    <nav className="max-h-[85px] flex items-center justify-between fixed top-0 bg-sky-400 shadow-lg w-full">
+    <nav className="max-h-[85px] flex md:items-center md:justify-between fixed top-0 bg-sky-400 shadow-lg w-full">
       <div className="flex items-center py-3 px-4">
         {/* Logo & Core Nav - Left */}
         <Link to="/">
@@ -67,7 +65,7 @@ export const Navbar = () => {
       <div className="flex items-center py-3 px-4">
         {userId ? (
           //show Welcome message if user is authenticated
-          <span className="text-white md:text-lg mr-4">
+          <span className="text-white text-sm md:text-lg mr-4">
             {user.firstName ? `Welcome back, ${user.firstName}!` : null}
           </span>
         ) : (
@@ -75,13 +73,13 @@ export const Navbar = () => {
             {" "}
             <Link
               to="/login"
-              className="py-2 px-4 md:text-lg text-white hover:text-sky-300 rounded-2xl transition duration-300 underline"
+              className="py-2 px-4 text-sm text-nowrap md:text-lg text-white hover:text-sky-300 rounded-2xl transition duration-300 underline"
             >
               Sign in
             </Link>
             <Link
               to="/signup"
-              className="py-2 px-4 md:text-lg text-white hover:text-sky-300 rounded-2xl transition duration-300 underline"
+              className="py-2 px-4 text-sm md:text-lg text-white hover:text-sky-300 rounded-2xl transition duration-300 underline"
             >
               Register
             </Link>
@@ -89,17 +87,29 @@ export const Navbar = () => {
         )}
         {/* Profile dropdown menu container */}
         <div
-          className="relative md:pr-4 md:text-lg flex items-center"
+          className="relative md:pr-6 md:text-lg flex items-center"
           ref={menuRef}
           onMouseLeave={() => setIsMenuOpen(false)}
         >
-          {/* Clickable profile icon button */}
-          <button type="button" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-            <FaUserAlt className="md:h-[25px] md:w-auto md:text-lg text-white hover:text-sky-300 rounded-full transition duration-300" />
+          {/* Clickable profile icon button - Render user image if it exist otherwise render default icon. */}
+          <button
+            type="button"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="focus:outline-none"
+          >
+            {!user.avatar ? (
+              <FaUserAlt className="md:h-[35px] lg:md:w-[35px] text-white rounded-full hover:text-sky-300 transition duration-300" />
+            ) : (
+              <img
+                src={user.avatar}
+                alt="Profile"
+                className="h-[50px] w-[50px] lg:md:h-[50px] lg:md:w-[50px] rounded-full object-cover hover:opacity-80 transition duration-300"
+              />
+            )}
           </button>
           {/* Dropdown — absolutely positioned, floats below the icon */}
           {isMenuOpen && userId && (
-            <div className="absolute right-0 top-full text-sm mt-1 w-48 bg-white shadow-lg z-50">
+            <div className="absolute right-0 top-12 text-sm mt-1 w-48 bg-white shadow-lg z-50 overflow-hidden">
               {/* menu items here */}
               <button
                 type="button"
@@ -111,24 +121,6 @@ export const Navbar = () => {
               >
                 👤 Profile
               </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setIsProfileOpen(true);
-                }}
-                className="block w-full text-left py-2 px-4 hover:bg-gray-200"
-              >
-                ✏️ Change Name
-              </button>
-              {isProfileOpen && (
-                <ManageProfile
-                  onClose={() => {
-                    setIsProfileOpen(false);
-                    setIsMenuOpen(false);
-                  }}
-                  onStateChange={fetchUserProfile}
-                />
-              )}
               <button
                 type="button"
                 onClick={() => {

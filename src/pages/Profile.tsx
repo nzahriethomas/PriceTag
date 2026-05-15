@@ -30,15 +30,15 @@ export const Profile = () => {
         <div className="flex justify-items-end gap-4">
           {/* Render Profile image if it exists; otherwise, render default icon */}
           {!user.avatar ? (
-            <FaUserAlt className="h-[50px] w-auto md:h-[50px] md:w-auto" />
+            <FaUserAlt className="md:h-[75px] md:w-[75px] md:text-lg text-white rounded-full" />
           ) : (
             <img
               src={user.avatar}
               alt="Profile"
-              className="h-[50px] w-auto md:h-[50px] md:w-auto rounded-full"
+              className="h-[50px] w-[50px] md:h-[75px] md:w-[75px] md:text-lg rounded-full object-cover"
             />
           )}
-          <span className="flex flex-col text-2xl md:text-4xl md:justify-center">
+          <span className="flex flex-col text-lg text-2xl md:text-4xl justify-center">
             {user.firstName} {user.lastName}
           </span>
         </div>
@@ -53,9 +53,9 @@ export const Profile = () => {
           <button
             type="button"
             onClick={() => setIsProfileOpen(true)}
-            className="py-2 px-4 cursor-pointer hover:text-orange-500 rounded-2xl transition duration-300"
+            className="py-2 pb-4 lg:md:pb-6 cursor-pointer hover:text-orange-500 rounded-2xl transition duration-300"
           >
-            <MdEdit className="h-6 w-6" />
+            <MdEdit className="h-5 w-4 md:h-7 md:w-6" />
           </button>
         </div>
         {/* Profile Content */}
