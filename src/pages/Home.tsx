@@ -1,40 +1,17 @@
 import { CreateListing } from "../components/CreateListing";
-import { useState, useEffect } from "react";
-import { supabase } from "../utils/supabase";
+import { useState } from "react";
 import { useSession } from "../components/UserRouting";
 import { ListingCard } from "../components/ListingCard";
-
-// Importing types
-import type { Listing } from "../types";
+import { useListings } from "../hooks/useListings";
 
 export const Home = () => {
   // Check if user is authenticated and pass through userId for user specific requests among listings.
-  const { isAuthenticated, userId } = useSession();
+  const { userId } = useSession();
 
-  // Listings hdden slide-in menu for create listings form.
+  // Listings hdden pop-up menu for create listings form.
   const [isOpen, setIsOpen] = useState(false);
 
-  // state variable for listing data/
-  const [listings, setListings] = useState<Listing[]>([]);
-
-  // Fetch listings from supabase.
-
-  const fetchListings = async () => {
-    const { data, error } = await supabase
-      .from("listings")
-      .select("*")
-      .order("created_at", { ascending: false }); // order by newest first
-
-    if (data) {
-      setListings(data);
-    }
-    if (error) {
-      console.error("Error fetching listings:", error);
-    }
-  };
-  useEffect(() => {
-    fetchListings();
-  }, []);
+  const { generalListings, fetchListings } = useListings(null);
 
   return (
     <>
@@ -43,7 +20,7 @@ export const Home = () => {
           Welcome to PriceTag
         </h1>
         {
-          isAuthenticated ? (
+          userId ? (
             <button
               type="button"
               onClick={() => setIsOpen(true)}
@@ -61,8 +38,8 @@ export const Home = () => {
         )}
         {/* Row display for listings whereas there is only one listing per row */}
         <div className="flex flex-col items-center gap-3">
-          {listings && listings.length > 0 ? (
-            listings.map((listing) => (
+          {generalListings && generalListings.length > 0 ? (
+            generalListings.map((listing) => (
               <ListingCard
                 key={listing.id}
                 listing={listing}

@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
+import React from "react";
 import { FaUserAlt } from "react-icons/fa";
-import { supabase } from "../utils/supabase";
 import { CreateListing } from "../components/CreateListing";
 import { ListingCard } from "../components/ListingCard";
 import { useSession } from "../components/UserRouting";
@@ -8,43 +7,21 @@ import { useProfile } from "../hooks/useProfile";
 // Media imports
 import { MdEdit } from "react-icons/md";
 // Importing types
-import type { Listing } from "../types";
 import { ManageProfile } from "../components/ManageProfile";
+import { useListings } from "../hooks/useListings";
 
 export const Profile = () => {
   // Listings hdden pop-up menu for create listings form.
-  const [isListingOpen, setIsListingOpen] = useState(false);
+  const [isListingOpen, setIsListingOpen] = React.useState(false);
   // Profile edit hidden pop-up menu for profile management form.
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = React.useState(false);
 
-  // state variable for listing data.
-  const [listings, setListings] = useState<Listing[]>([]);
-
-  // Check if user is authenticated and pass through userId for user specific requests among listings.
+  // Check if user is authenticated using userId which is used for specific listingfiltering.
   const { userId } = useSession();
   // Custom hook to fetch user profile data.
   const { user, fetchUserProfile } = useProfile(userId);
 
-  // Fetch listings from supabase.
-  const fetchListings = async () => {
-    const { data, error } = await supabase
-      .from("listings")
-      .select("*")
-      .order("created_at", { ascending: false }); // order by newest first
-
-    if (data) {
-      setListings(data);
-    }
-    if (error) {
-      console.error("Error fetching listings:", error);
-    }
-  };
-  useEffect(() => {
-    fetchListings();
-  }, []);
-
-  // Filter listings to only show those that belong to the user.
-  const userListings = listings.filter((listing) => listing.user_id === userId);
+  const { userListings, fetchListings } = useListings(userId);
 
   return (
     <>
