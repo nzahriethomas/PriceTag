@@ -20,7 +20,7 @@ export const Profile = () => {
   const { userId } = useSession();
   // Custom hook to fetch user profile data.
   const { user, fetchUserProfile } = useProfile(userId);
-
+  // Custom hook to fetch listings data and filter user specific listings.
   const { userListings, fetchListings } = useListings(userId);
 
   return (

@@ -8,6 +8,7 @@ import { Signup } from "./pages/Signup";
 // Component imports
 import { Navbar } from "./components/Navbar";
 import { ProtectedRoute, PublicRoute } from "./components/UserRouting";
+import { ListingDetail } from "./pages/ListingDetail";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
             </PublicRoute>
           }
         />
+        <Route path="/listing/:id" element={<ListingDetail />} />
       </Routes>
     </main>
   );
